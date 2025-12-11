@@ -62,6 +62,11 @@ def create_best_model(df: pd.DataFrame, save_path='models/catboost_pipeline.pkl'
         X, y, test_size=0.2, shuffle=False, random_state=42
     )
 
+    test_df = X_test.copy()
+    test_df["cnt"] = y_test.values
+    test_df.to_csv("data/test_split.csv", index=False)
+    print("Test split saved to data/test_split.csv")
+
     rush_transformer, ct = create_preprocessing_pipeline()
 
     best_model_pipeline = Pipeline([
