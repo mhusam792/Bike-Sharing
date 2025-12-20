@@ -1,0 +1,58 @@
+# Package Overview
+package_name: bike_sharing_reg
+
+# Data Files
+training_data_file: hour.csv
+test_data_file: test_split.csv
+
+# Variables
+# The variable we are attempting to predict (cnt)
+target: cnt
+
+pipeline_name: catboost_regressor_model
+pipeline_save_file: catboost_regressor_model_output_v
+
+features:
+  - season
+  - yr
+  - mnth
+  - hr
+  - holiday
+  - weekday
+  - workingday
+  - weathersit
+  - temp
+  - atemp
+  - hum
+  - windspeed
+  - registered
+  - casual
+
+# Set train/test split
+test_size: 0.2
+
+# to set the random seed
+random_state: 42
+
+# Cyclical Features
+cyclical_cols:
+  - season
+  - mnth
+  - weekday
+  - hr
+
+# Numerical Features
+num_cols: 
+  - temp
+  - atemp
+  - hum
+  - windspeed
+
+# Categorical Features
+cat_cols:
+  - weathersit
+
+# Make new features from existing features
+new_features:
+  - casual
+  - registered
