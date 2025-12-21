@@ -5,6 +5,9 @@ package_name: bike_sharing_reg
 training_data_file: hour.csv
 test_data_file: test_split.csv
 
+# Trained Model
+trained_model_path: 
+
 # Variables
 # The variable we are attempting to predict (cnt)
 target: cnt
