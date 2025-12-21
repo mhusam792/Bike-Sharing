@@ -8,7 +8,11 @@ from catboost import CatBoostRegressor
 from lightgbm import LGBMRegressor
 from bike_sharing_regressor_model.models.preprocess import create_preprocessing_pipeline
 import joblib
-from bike_sharing_regressor_model.config.settings import DATA_CONFIG
+from bike_sharing_regressor_model.config.settings import (FEATURES_LIST,
+                                                          TARGET,
+                                                          RANDOM_STATE,
+                                                          TEST_SIZE,
+                                                          TRAINED_MODEL_PATH)
 from typing import List, Tuple
 
 
@@ -19,8 +23,8 @@ def _create_train_test_df(
 ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
     
     if features is None or target is None:
-        features = DATA_CONFIG['features']
-        target = DATA_CONFIG['target']
+        features = FEATURES_LIST
+        target = TARGET
 
     X = df[features]
     y = df[target]
@@ -28,9 +32,9 @@ def _create_train_test_df(
     X_train, X_test, y_train, y_test = train_test_split(
         X,
         y, 
-        test_size=DATA_CONFIG['split']['test_size'], 
+        test_size=TEST_SIZE, 
         shuffle=False, 
-        random_state=DATA_CONFIG['split']['random_state']
+        random_state=RANDOM_STATE
     )
 
     return X_train, X_test, y_train, y_test
@@ -68,7 +72,7 @@ def compare_between_models(df: pd.DataFrame) -> pd.DataFrame:
 
     return pd.DataFrame(results)
 
-def create_best_model(df: pd.DataFrame, save_path='trained_models/catboost_pipeline.pkl'):
+def create_best_model(df: pd.DataFrame, save_path=TRAINED_MODEL_PATH):
     X_train, X_test, y_train, y_test = _create_train_test_df(df=df)
 
     test_df = X_test.copy()
