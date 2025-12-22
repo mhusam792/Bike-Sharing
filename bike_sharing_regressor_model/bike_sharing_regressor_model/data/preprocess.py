@@ -25,7 +25,7 @@ def create_preprocessing_pipeline():
         ('ohe', OneHotEncoder(sparse_output=False))
     ])
 
-    ct = ColumnTransformer(transformers=[
+    preprocessor = ColumnTransformer(transformers=[
         ('cyclical', cyclical_pipe, CYCLICAL_FEATURES),
         ('scaling', numeric_pipe, NUMERICAL_FEATURES),
         ('ohe', categories_pipe, CATEGORICAL_FEAUTRES)
@@ -36,4 +36,4 @@ def create_preprocessing_pipeline():
         validate=False
     )
 
-    return rush_transformer, ct
+    return rush_transformer, preprocessor

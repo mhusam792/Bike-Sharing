@@ -10,37 +10,61 @@ from lightgbm import LGBMRegressor
 from bike_sharing_regressor_model.utils.helper import create_train_test_df
 from bike_sharing_regressor_model.data.preprocess import create_preprocessing_pipeline
 
+def evaluation_metrics(y_train, y_pred_train, y_test, y_pred_test) -> pd.DataFrame:
+    return pd.DataFrame([{
+        "r2_train": r2_score(y_train, y_pred_train),
+        "r2_test": r2_score(y_test, y_pred_test),
+        "rmse_train": root_mean_squared_error(y_train, y_pred_train),
+        "rmse_test": root_mean_squared_error(y_test, y_pred_test),
+        "mae_train": mean_absolute_error(y_train, y_pred_train),
+        "mae_test": mean_absolute_error(y_test, y_pred_test),
+    }])
 
 
 def compare_between_models(df: pd.DataFrame) -> pd.DataFrame:
 
-    X_train, X_test, y_train, y_test = create_train_test_df(df=df)
+    X_train, X_test, y_train, y_test = create_train_test_df(df)
 
-    rush_transformer, ct = create_preprocessing_pipeline()
+    rush_transformer, preprocessor = create_preprocessing_pipeline()
 
     models = {
-        'XGBRegressor': XGBRegressor(),
-        'CatBoostRegressor': CatBoostRegressor(verbose=0, random_state=42),
-        'LGBMRegressor': LGBMRegressor()
+        "XGBRegressor": XGBRegressor(
+            random_state=42,
+            n_estimators=300,
+            learning_rate=0.05
+        ),
+        "CatBoostRegressor": CatBoostRegressor(
+            verbose=0,
+            random_state=42
+        ),
+        "LGBMRegressor": LGBMRegressor(
+            random_state=42,
+            n_estimators=300
+        ),
     }
 
-    results = {}
-    for model_name, model_obj in models.items():
-        full_pipeline = Pipeline([
-            ('rush_hrs', rush_transformer),
-            ('preprocessing', ct),
-            ('model', model_obj)
-        ])
-        full_pipeline.fit(X_train, y_train)
-        y_pred_train = full_pipeline.predict(X_train)
-        y_pred_test = full_pipeline.predict(X_test)
-        results[model_name] = {
-            "r2_train": r2_score(y_train, y_pred_train),
-            "r2_test": r2_score(y_test, y_pred_test),
-            "rmse_train": root_mean_squared_error(y_train, y_pred_train),
-            "rmse_test": root_mean_squared_error(y_test, y_pred_test),
-            "mae_train": mean_absolute_error(y_train, y_pred_train),
-            "mae_test": mean_absolute_error(y_test, y_pred_test)
-        }
+    results = []
 
-    return pd.DataFrame(results)
+    for model_name, model in models.items():
+        pipeline = Pipeline([
+            ("rush_hours", rush_transformer),
+            ("preprocessing", preprocessor),
+            ("model", model),
+        ])
+
+        pipeline.fit(X_train, y_train)
+
+        y_pred_train = pipeline.predict(X_train)
+        y_pred_test = pipeline.predict(X_test)
+
+        metrics_df = evaluation_metrics(
+            y_train, y_pred_train, y_test, y_pred_test
+        )
+        metrics_df["model"] = model_name
+        results.append(metrics_df)
+
+    return (
+        pd.concat(results)
+        .set_index("model")
+        .sort_values("rmse_test")
+    )
