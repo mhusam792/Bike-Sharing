@@ -1,4 +1,5 @@
-from bike_sharing_regressor_model.models.train import create_best_model, compare_between_models
+from bike_sharing_regressor_model.models.train import create_best_model
+from bike_sharing_regressor_model.models.evaluate import compare_between_models
 from bike_sharing_regressor_model.config.settings import DATA_CONFIG
 from bike_sharing_regressor_model.data.load import load_dataframe
 

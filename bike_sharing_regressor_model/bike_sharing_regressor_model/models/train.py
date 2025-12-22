@@ -1,79 +1,18 @@
-# train.py
 import pandas as pd
-from sklearn.model_selection import train_test_split
+
 from sklearn.pipeline import Pipeline
-from sklearn.metrics import r2_score, root_mean_squared_error, mean_absolute_error
-from xgboost import XGBRegressor
-from catboost import CatBoostRegressor
-from lightgbm import LGBMRegressor
-from bike_sharing_regressor_model.models.preprocess import create_preprocessing_pipeline
 import joblib
-from bike_sharing_regressor_model.config.settings import (FEATURES_LIST,
-                                                          TARGET,
-                                                          RANDOM_STATE,
-                                                          TEST_SIZE,
-                                                          TRAINED_MODEL_PATH)
-from typing import List, Tuple
 
+from catboost import CatBoostRegressor
+                                           
+from bike_sharing_regressor_model.config.settings import TRAINED_MODEL_PATH
+from bike_sharing_regressor_model.utils.helper import create_train_test_df
+from bike_sharing_regressor_model.data.preprocess import create_preprocessing_pipeline
 
-def _create_train_test_df(
-        df: pd.DataFrame, 
-        features: List[str] | None=None, 
-        target: str | None =None
-) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
-    
-    if features is None or target is None:
-        features = FEATURES_LIST
-        target = TARGET
-
-    X = df[features]
-    y = df[target]
-
-    X_train, X_test, y_train, y_test = train_test_split(
-        X,
-        y, 
-        test_size=TEST_SIZE, 
-        shuffle=False, 
-        random_state=RANDOM_STATE
-    )
-
-    return X_train, X_test, y_train, y_test
-
-def compare_between_models(df: pd.DataFrame) -> pd.DataFrame:
-
-    X_train, X_test, y_train, y_test = _create_train_test_df(df=df)
-
-    rush_transformer, ct = create_preprocessing_pipeline()
-
-    models = {
-        'XGBRegressor': XGBRegressor(),
-        'CatBoostRegressor': CatBoostRegressor(verbose=0, random_state=42),
-        'LGBMRegressor': LGBMRegressor()
-    }
-
-    results = {}
-    for model_name, model_obj in models.items():
-        full_pipeline = Pipeline([
-            ('rush_hrs', rush_transformer),
-            ('preprocessing', ct),
-            ('model', model_obj)
-        ])
-        full_pipeline.fit(X_train, y_train)
-        y_pred_train = full_pipeline.predict(X_train)
-        y_pred_test = full_pipeline.predict(X_test)
-        results[model_name] = {
-            "r2_train": r2_score(y_train, y_pred_train),
-            "r2_test": r2_score(y_test, y_pred_test),
-            "rmse_train": root_mean_squared_error(y_train, y_pred_train),
-            "rmse_test": root_mean_squared_error(y_test, y_pred_test),
-            "mae_train": mean_absolute_error(y_train, y_pred_train),
-            "mae_test": mean_absolute_error(y_test, y_pred_test)
-        }
-
-    return pd.DataFrame(results)
+                                                           
 
 def create_best_model(df: pd.DataFrame, save_path=TRAINED_MODEL_PATH):
-    X_train, X_test, y_train, y_test = _create_train_test_df(df=df)
+    X_train, X_test, y_train, y_test = create_train_test_df(df=df)
 
     test_df = X_test.copy()
     test_df["cnt"] = y_test.values

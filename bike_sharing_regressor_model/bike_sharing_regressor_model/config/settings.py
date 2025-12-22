@@ -1,6 +1,11 @@
-from bike_sharing_regressor_model.utils.helper import load_config
+import yaml
 import bike_sharing_regressor_model
 from pathlib import Path
+
+
+def load_config(path):
+    with open(path) as f:
+        return yaml.safe_load(f)
 
 # Package and Root Path
 PACKAGE_ROOT = Path(bike_sharing_regressor_model.__file__).resolve().parent
