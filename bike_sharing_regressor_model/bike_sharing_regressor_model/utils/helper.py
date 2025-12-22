@@ -12,9 +12,6 @@ from bike_sharing_regressor_model.config.settings import (
 )
 
 
-
-
-
 def create_train_test_df(
         df: pd.DataFrame, 
         features: List[str] | None=None, 
