@@ -9,6 +9,7 @@ from lightgbm import LGBMRegressor
 
 from bike_sharing_regressor_model.utils.helper import create_train_test_df
 from bike_sharing_regressor_model.data.preprocess import create_preprocessing_pipeline
+from bike_sharing_regressor_model.config.settings import RANDOM_STATE
 
 def evaluation_metrics(y_train, y_pred_train, y_test, y_pred_test) -> pd.DataFrame:
     return pd.DataFrame([{
@@ -29,16 +30,16 @@ def compare_between_models(df: pd.DataFrame) -> pd.DataFrame:
 
     models = {
         "XGBRegressor": XGBRegressor(
-            random_state=42,
+            random_state=RANDOM_STATE,
             n_estimators=300,
             learning_rate=0.05
         ),
         "CatBoostRegressor": CatBoostRegressor(
             verbose=0,
-            random_state=42
+            random_state=RANDOM_STATE
         ),
         "LGBMRegressor": LGBMRegressor(
-            random_state=42,
+            random_state=RANDOM_STATE,
             n_estimators=300
         ),
     }
