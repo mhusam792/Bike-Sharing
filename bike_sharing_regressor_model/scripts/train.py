@@ -5,7 +5,12 @@ from bike_sharing_regressor_model.data.load import load_dataframe
 
 TRAINING_DATA_FILE_PATH = f"datasets/{DATA_CONFIG['training_data_file']}"
 
-df = load_dataframe(path=TRAINING_DATA_FILE_PATH)
-results_df = compare_between_models(df)
-print(results_df)
-create_best_model(df)
+def run_training():
+    df = load_dataframe(path=TRAINING_DATA_FILE_PATH)
+    results_df = compare_between_models(df)
+    print(results_df)
+    create_best_model(df)
+
+if __name__ == "__main__":
+    run_training()
+
