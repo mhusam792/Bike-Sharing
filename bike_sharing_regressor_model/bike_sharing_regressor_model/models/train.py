@@ -28,4 +28,4 @@ def create_best_model(df: pd.DataFrame, save_path=TRAINED_MODEL_PATH):
     ])
     best_model_pipeline.fit(X_train, y_train)
     joblib.dump(best_model_pipeline, f"{save_path}")
-    print(f"Best model saved to {save_path}.pkl")
+    print(f"Best model saved to {save_path}")
