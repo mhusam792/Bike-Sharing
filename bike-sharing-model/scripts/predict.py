@@ -1,4 +1,4 @@
-from bike_sharing_model.config.settings import TESTING_DATA_FILE_PATH
+from bike_sharing_model.config.core import TESTING_DATA_FILE_PATH
 from bike_sharing_model.data.loader import load_dataframe
 from bike_sharing_model.models.predictor import predict_new_data
 

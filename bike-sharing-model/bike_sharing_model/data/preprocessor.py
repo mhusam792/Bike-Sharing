@@ -5,7 +5,7 @@ from feature_engine.creation import CyclicalFeatures
 
 from functools import partial
 
-from bike_sharing_model.config.settings import DATA_CONFIG
+from bike_sharing_model.config.core import DATA_CONFIG
 from bike_sharing_model.features.feature_engineering import get_rush_hours
 
 CYCLICAL_FEATURES = DATA_CONFIG['cyclical_cols']

@@ -1,6 +1,6 @@
 import pandas as pd
 import joblib
-from bike_sharing_model.config.settings import (TRAINED_MODEL_PATH, 
+from bike_sharing_model.config.core import (TRAINED_MODEL_PATH, 
                                                 PREDICTION_PATH_FILE)
 
 

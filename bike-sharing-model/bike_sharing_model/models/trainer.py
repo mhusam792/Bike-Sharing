@@ -5,7 +5,7 @@ import joblib
 
 from catboost import CatBoostRegressor
                                            
-from bike_sharing_model.config.settings import TRAINED_MODEL_PATH, TESTING_DATA_FILE_PATH
+from bike_sharing_model.config.core import TRAINED_MODEL_PATH, TESTING_DATA_FILE_PATH
 from bike_sharing_model.utils.helpers import create_train_test_df
 from bike_sharing_model.data.preprocessor import create_preprocessing_pipeline
 

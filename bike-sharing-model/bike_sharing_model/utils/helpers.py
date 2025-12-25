@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 
 from typing import List, Tuple
 
-from bike_sharing_model.config.settings import (
+from bike_sharing_model.config.core import (
     FEATURES_LIST,
     TARGET,
     TEST_SIZE,

@@ -9,7 +9,7 @@ from lightgbm import LGBMRegressor
 
 from bike_sharing_model.utils.helpers import create_train_test_df
 from bike_sharing_model.data.preprocessor import create_preprocessing_pipeline
-from bike_sharing_model.config.settings import RANDOM_STATE
+from bike_sharing_model.config.core import RANDOM_STATE
 
 def evaluation_metrics(y_train, y_pred_train, y_test, y_pred_test) -> pd.DataFrame:
     return pd.DataFrame([{
