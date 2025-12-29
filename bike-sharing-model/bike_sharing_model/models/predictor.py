@@ -24,7 +24,12 @@ def predict_new_data(X_new: pd.DataFrame,
 
     return result
 
-def run_prediction():
+def run_prediction(end_point:bool=False) -> dict|None:
     X_new = load_dataframe(path=TESTING_DATA_FILE_PATH)
     pred_result = predict_new_data(X_new)
+
+    if end_point:
+        return {
+            'pred_result_info': pred_result
+        }
     print(pd.DataFrame.from_dict(pred_result, orient="index"))

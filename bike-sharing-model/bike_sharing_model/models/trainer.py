@@ -46,11 +46,16 @@ def create_best_model(df: pd.DataFrame,
     return result
 
 
-def run_training():
+def run_training(end_point:bool=False) -> dict|None:
     df = load_dataframe(path=TRAINING_DATA_FILE_PATH)
 
     comparing_models = compare_between_models(df)
-    print(pd.DataFrame(comparing_models))
-
     best_model_info = create_best_model(df)
+
+    if end_point:
+        return {
+            'comparing_models': comparing_models,
+            'best_model_info': best_model_info
+        }
+    print(pd.DataFrame(comparing_models))
     print(pd.DataFrame.from_dict(best_model_info, orient="index"))
