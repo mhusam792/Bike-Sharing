@@ -61,3 +61,22 @@ def evaluation_metrics(y_test, y_pred_test, y_train=None, y_pred_train=None, end
     if end_point:
         return result
     return pd.DataFrame(result)
+
+def reshape_comparing_df(comparing_dict:dict) -> pd.DataFrame:
+    rows = []
+
+    for model_name, scores in comparing_dict.items():
+        for split in ["train", "test"]:
+            score_key = f"{split}_score"
+            metrics = scores[score_key]
+
+            rows.append({
+                "model": model_name,
+                "split": split,
+                "r2": metrics["r2"],
+                "rmse": metrics["rmse"],
+                "mae": metrics["mae"],
+            })
+
+    df_results = pd.DataFrame(rows)
+    return df_results
