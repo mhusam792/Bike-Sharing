@@ -8,10 +8,10 @@ from functools import partial
 from bike_sharing_model.config.core import DATA_CONFIG
 from bike_sharing_model.features.feature_engineering import get_rush_hours
 
-CYCLICAL_FEATURES = DATA_CONFIG['cyclical_cols']
-NUMERICAL_FEATURES = DATA_CONFIG['num_cols']
-CATEGORICAL_FEAUTRES = DATA_CONFIG['cat_cols']
-NEW_FEATURES = DATA_CONFIG['new_features']
+CYCLICAL_FEATURES = DATA_CONFIG.cyclical_cols
+NUMERICAL_FEATURES = DATA_CONFIG.num_cols
+CATEGORICAL_FEAUTRES = DATA_CONFIG.cat_cols
+NEW_FEATURES = DATA_CONFIG.new_features
 
 def create_preprocessing_pipeline():
 
