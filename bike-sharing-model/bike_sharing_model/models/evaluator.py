@@ -22,7 +22,7 @@ def evaluation_metrics(y_train, y_pred_train, y_test, y_pred_test) -> pd.DataFra
     }])
 
 
-def compare_between_models(df: pd.DataFrame) -> pd.DataFrame:
+def compare_between_models(df: pd.DataFrame) -> list[dict]:
 
     X_train, X_test, y_train, y_test = create_train_test_df(df)
 
@@ -64,8 +64,10 @@ def compare_between_models(df: pd.DataFrame) -> pd.DataFrame:
         metrics_df["model"] = model_name
         results.append(metrics_df)
 
-    return (
+    df = (
         pd.concat(results)
         .set_index("model")
         .sort_values("rmse_test")
     )
+
+    return df.reset_index().to_dict(orient="records")
