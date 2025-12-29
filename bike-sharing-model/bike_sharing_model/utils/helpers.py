@@ -42,12 +42,16 @@ def create_train_test_df(
     return X_train, X_test, y_train, y_test
 
 
-def evaluation_metrics(y_train, y_pred_train, y_test, y_pred_test) -> pd.DataFrame:
-    return pd.DataFrame([{
+def evaluation_metrics(y_train, y_pred_train, y_test, y_pred_test, end_point:bool=False) -> pd.DataFrame | list[dict]:
+    result =  [{
         "r2_train": r2_score(y_train, y_pred_train),
         "r2_test": r2_score(y_test, y_pred_test),
         "rmse_train": root_mean_squared_error(y_train, y_pred_train),
         "rmse_test": root_mean_squared_error(y_test, y_pred_test),
         "mae_train": mean_absolute_error(y_train, y_pred_train),
         "mae_test": mean_absolute_error(y_test, y_pred_test),
-    }])
+    }]
+
+    if end_point:
+        return result
+    return pd.DataFrame(result)
