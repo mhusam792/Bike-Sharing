@@ -12,7 +12,7 @@ from bike_sharing_model.config.core import (TRAINED_MODEL_PATH,
 
 from bike_sharing_model.data.loader import load_dataframe
 from bike_sharing_model.models.evaluator import compare_between_models
-from bike_sharing_model.utils.helpers import create_train_test_df
+from bike_sharing_model.utils.helpers import create_train_test_df, reshape_comparing_df
 from bike_sharing_model.data.preprocessor import create_preprocessing_pipeline
                                                 
 
@@ -50,6 +50,7 @@ def run_training(end_point:bool=False) -> dict|None:
     df = load_dataframe(path=TRAINING_DATA_FILE_PATH)
 
     comparing_models = compare_between_models(df)
+    reshape_comp_df = reshape_comparing_df(comparing_models)
     best_model_info = create_best_model(df)
 
     if end_point:
@@ -57,5 +58,5 @@ def run_training(end_point:bool=False) -> dict|None:
             'comparing_models': comparing_models,
             'best_model_info': best_model_info
         }
-    print(pd.DataFrame(comparing_models))
+    print(pd.DataFrame(reshape_comp_df).set_index(['model', 'split']))
     print(pd.DataFrame.from_dict(best_model_info, orient="index"))
