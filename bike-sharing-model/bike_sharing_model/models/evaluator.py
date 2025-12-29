@@ -1,7 +1,6 @@
 import pandas as pd
 
 from sklearn.pipeline import Pipeline
-from sklearn.metrics import r2_score, root_mean_squared_error, mean_absolute_error
 
 from xgboost import XGBRegressor
 from catboost import CatBoostRegressor
