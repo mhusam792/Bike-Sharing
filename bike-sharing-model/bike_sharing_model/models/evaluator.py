@@ -7,19 +7,9 @@ from xgboost import XGBRegressor
 from catboost import CatBoostRegressor
 from lightgbm import LGBMRegressor
 
-from bike_sharing_model.utils.helpers import create_train_test_df
+from bike_sharing_model.utils.helpers import create_train_test_df, evaluation_metrics
 from bike_sharing_model.data.preprocessor import create_preprocessing_pipeline
 from bike_sharing_model.config.core import RANDOM_STATE
-
-def evaluation_metrics(y_train, y_pred_train, y_test, y_pred_test) -> pd.DataFrame:
-    return pd.DataFrame([{
-        "r2_train": r2_score(y_train, y_pred_train),
-        "r2_test": r2_score(y_test, y_pred_test),
-        "rmse_train": root_mean_squared_error(y_train, y_pred_train),
-        "rmse_test": root_mean_squared_error(y_test, y_pred_test),
-        "mae_train": mean_absolute_error(y_train, y_pred_train),
-        "mae_test": mean_absolute_error(y_test, y_pred_test),
-    }])
 
 
 def compare_between_models(df: pd.DataFrame) -> list[dict]:
