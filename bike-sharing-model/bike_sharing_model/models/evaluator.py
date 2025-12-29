@@ -11,7 +11,7 @@ from bike_sharing_model.data.preprocessor import create_preprocessing_pipeline
 from bike_sharing_model.config.core import RANDOM_STATE
 
 
-def compare_between_models(df: pd.DataFrame) -> list[dict]:
+def compare_between_models(df: pd.DataFrame) -> dict[str, dict]:
 
     X_train, X_test, y_train, y_test = create_train_test_df(df)
 
@@ -33,7 +33,7 @@ def compare_between_models(df: pd.DataFrame) -> list[dict]:
         ),
     }
 
-    results = []
+    results:dict[str, dict] = {}
 
     for model_name, model in models.items():
         # Full model
@@ -50,13 +50,8 @@ def compare_between_models(df: pd.DataFrame) -> list[dict]:
         y_pred_test = pipeline.predict(X_test)
 
         # Dictionary of scores metrics
-        metrics_df = dict()
-        metrics_df[model_name] = evaluation_metrics(
+        results[model_name] = evaluation_metrics(
             y_train, y_pred_train, y_test, y_pred_test, end_point=True
         )
-
-        # Adding Model name
-        # metrics_df[model_name] = metrics_df
-        results.append(metrics_df)
 
     return results
