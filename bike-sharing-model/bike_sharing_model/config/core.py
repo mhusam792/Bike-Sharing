@@ -18,7 +18,9 @@ DATA_CONFIG = ValidateInputs(**load_config(DATA_CONFIG_PATH))
 
 # Directory Paths for Datasets, Predictions and Trained Models
 DATASET_DIR = ROOT / "datasets" 
+
 PREDICTION_DIR = ROOT / 'outputs'
+PREDICTION_DIR.mkdir(parents=True, exist_ok=True)
 
 TRAINED_MODEL_DIR = ROOT / "models"
 TRAINED_MODEL_DIR.mkdir(parents=True, exist_ok=True)
