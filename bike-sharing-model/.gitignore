@@ -6,4 +6,4 @@ models/*.pkl
 outputs/
 .ipynb_checkpoints
 .swp
-*.vscode/
+.vscode/
