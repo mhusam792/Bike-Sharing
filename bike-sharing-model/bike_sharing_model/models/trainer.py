@@ -5,11 +5,16 @@ import joblib
 
 from catboost import CatBoostRegressor
                                            
-from bike_sharing_model.config.core import TRAINED_MODEL_PATH, TESTING_DATA_FILE_PATH, RANDOM_STATE
+from bike_sharing_model.config.core import (TRAINED_MODEL_PATH, 
+                                            TESTING_DATA_FILE_PATH, 
+                                            RANDOM_STATE, 
+                                            TRAINING_DATA_FILE_PATH)
+
+from bike_sharing_model.data.loader import load_dataframe
+from bike_sharing_model.models.evaluator import compare_between_models
 from bike_sharing_model.utils.helpers import create_train_test_df
 from bike_sharing_model.data.preprocessor import create_preprocessing_pipeline
                                                 
-from typing import Dict
 
 def create_best_model(df: pd.DataFrame, 
                       save_path=TRAINED_MODEL_PATH,
@@ -39,3 +44,13 @@ def create_best_model(df: pd.DataFrame,
     result['saved_model_path'] = str(save_path)
 
     return result
+
+
+def run_training():
+    df = load_dataframe(path=TRAINING_DATA_FILE_PATH)
+
+    comparing_models = compare_between_models(df)
+    print(pd.DataFrame(comparing_models))
+
+    best_model_info = create_best_model(df)
+    print(pd.DataFrame.from_dict(best_model_info, orient="index"))

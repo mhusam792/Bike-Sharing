@@ -37,27 +37,27 @@ def compare_between_models(df: pd.DataFrame) -> list[dict]:
     results = []
 
     for model_name, model in models.items():
+        # Full model
         pipeline = Pipeline([
             ("rush_hours", rush_transformer),
             ("preprocessing", preprocessor),
             ("model", model),
         ])
-
+        # Fitting it
         pipeline.fit(X_train, y_train)
 
+        # Get predictions for train and test
         y_pred_train = pipeline.predict(X_train)
         y_pred_test = pipeline.predict(X_test)
 
-        metrics_df = evaluation_metrics(
-            y_train, y_pred_train, y_test, y_pred_test
+        # Dictionary of scores metrics
+        metrics_df = dict()
+        metrics_df[model_name] = evaluation_metrics(
+            y_train, y_pred_train, y_test, y_pred_test, end_point=True
         )
-        metrics_df["model"] = model_name
+
+        # Adding Model name
+        # metrics_df[model_name] = metrics_df
         results.append(metrics_df)
 
-    df = (
-        pd.concat(results)
-        .set_index("model")
-        .sort_values("rmse_test")
-    )
-
-    return df.reset_index().to_dict(orient="records")
+    return results
