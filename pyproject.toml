@@ -42,10 +42,11 @@ train-bike = "scripts.train:run_training"
 predict-bike = "scripts.predict:run_prediction"
 
 [tool.setuptools]
+include-package-data = true
 packages = { find = { where = ["."] } }
 
 [tool.setuptools.package-data]
-bike_sharing_regressor_model = ["configs/*.yml"]
+bike_sharing_model = ["configs/*.yml"]
 
 # -------------------------
 # 🧪 Pytest

@@ -13,19 +13,21 @@ def load_config(path):
 
 # Package and Root Path
 PACKAGE_ROOT = Path(bike_sharing_model.__file__).resolve().parent
-ROOT = PACKAGE_ROOT.parent
 
 # Reading Configrations from data.yml file
-DATA_CONFIG_PATH = ROOT / "configs" / "data.yml"
+DATA_CONFIG_PATH = PACKAGE_ROOT / "configs" / "data.yml"
 DATA_CONFIG = ValidateInputs(**load_config(DATA_CONFIG_PATH))
 
-# Directory Paths for Datasets, Predictions and Trained Models
-DATASET_DIR = ROOT / "datasets"
 
-PREDICTION_DIR = ROOT / "outputs"
+Base_DIR = Path.cwd()
+
+# Directory Paths for Datasets, Predictions and Trained Models
+DATASET_DIR = Base_DIR / "datasets"
+
+PREDICTION_DIR = Base_DIR / "outputs"
 PREDICTION_DIR.mkdir(parents=True, exist_ok=True)
 
-TRAINED_MODEL_DIR = ROOT / "models"
+TRAINED_MODEL_DIR = Base_DIR / "models"
 TRAINED_MODEL_DIR.mkdir(parents=True, exist_ok=True)
 
 
