@@ -24,31 +24,6 @@ Given historical bike-sharing data, we want to predict the **total number of ren
 
 ---
 
-## 📂 Project Structure
-
-```
-bike_sharing/
-│
-├── data/
-│   ├── hour.csv
-│   └── test_split.csv
-│
-├── models/
-│   └── catboost_pipeline.pkl
-│
-├── src/
-│   ├── main.py
-│   ├── train.py
-│   ├── predict.py
-│   └── preprocess.py
-│
-├── README.md
-├── .gitignore
-└── requirements.txt
-```
-
----
-
 ## ⚙️ Feature Engineering & Preprocessing
 
 ### 🔹 Feature Engineering
