@@ -3,9 +3,9 @@ name: Model Packaging CI/CD
 
 on:
   push:
-    branches: ["api"]
+    branches: ["main"]
   pull_request:
-    branches: ["api"]
+    branches: ["main"]
 
 jobs:
   build:
