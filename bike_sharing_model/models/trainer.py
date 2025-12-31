@@ -60,5 +60,8 @@ def run_training(end_point: bool = False) -> dict | None:
             "comparing_models": comparing_models,
             "best_model_info": best_model_info,
         }
+
     print(pd.DataFrame(reshape_comp_df).set_index(["model", "split"]))
     print(pd.DataFrame.from_dict(best_model_info, orient="index"))
+
+    return
