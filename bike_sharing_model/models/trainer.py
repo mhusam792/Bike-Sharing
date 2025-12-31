@@ -64,4 +64,4 @@ def run_training(end_point: bool = False) -> dict | None:
     print(pd.DataFrame(reshape_comp_df).set_index(["model", "split"]))
     print(pd.DataFrame.from_dict(best_model_info, orient="index"))
 
-    return
+    return None

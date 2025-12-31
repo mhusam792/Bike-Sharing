@@ -34,4 +34,4 @@ def run_prediction(end_point: bool = False) -> dict | None:
     if end_point:
         return {"pred_result_info": pred_result}
     print(pd.DataFrame.from_dict(pred_result, orient="index"))
-    return
+    return None
