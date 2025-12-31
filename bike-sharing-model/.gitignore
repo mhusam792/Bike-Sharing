@@ -7,4 +7,7 @@ outputs/
 .ipynb_checkpoints
 .swp
 .vscode/
+../.vscode/
 build
+.pytest_cache
+.ruff_cache
