@@ -1,0 +1,56 @@
+name: Model Packaging CI/CD
+
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11"]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Upgrade pip
+      run: python -m pip install --upgrade pip
+
+    - name: Install package and dev dependencies
+      run: |
+        pip install build
+        pip install .[dev]
+
+    - name: Lint with flake8
+      run: |
+        flake8 bike_sharing_model api scripts tests --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 bike_sharing_model api scripts tests --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    - name: Format check with black
+      run: black --check bike_sharing_model api scripts tests
+
+    - name: Auto-format with black (optional)
+      if: github.event_name == 'push'
+      run: black bike_sharing_model api scripts tests
+
+    - name: Type check with mypy
+      run: mypy bike_sharing_model api scripts tests
+
+    - name: Test with pytest and coverage
+      run: pytest --cov=bike_sharing_model --maxfail=1 --disable-warnings -q
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: htmlcov/
