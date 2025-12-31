@@ -1,28 +1,21 @@
-import pandas as pd
-
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import (
-    r2_score,
-    mean_absolute_error,
-    root_mean_squared_error
-)
-
 from typing import List, Tuple
+
+import pandas as pd
+from sklearn.metrics import mean_absolute_error, r2_score, root_mean_squared_error
+from sklearn.model_selection import train_test_split
 
 from bike_sharing_model.config.core import (
     FEATURES_LIST,
+    RANDOM_STATE,
     TARGET,
     TEST_SIZE,
-    RANDOM_STATE
 )
 
 
 def create_train_test_df(
-        df: pd.DataFrame, 
-        features: List[str] | None=None, 
-        target: str | None =None
+    df: pd.DataFrame, features: List[str] | None = None, target: str | None = None
 ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
-    
+
     if features is None or target is None:
         features = FEATURES_LIST
         target = TARGET
@@ -31,17 +24,15 @@ def create_train_test_df(
     y = df[target]
 
     X_train, X_test, y_train, y_test = train_test_split(
-        X,
-        y, 
-        test_size=TEST_SIZE, 
-        shuffle=False, 
-        random_state=RANDOM_STATE
+        X, y, test_size=TEST_SIZE, shuffle=False, random_state=RANDOM_STATE
     )
 
     return X_train, X_test, y_train, y_test
 
 
-def evaluation_metrics(y_test, y_pred_test, y_train=None, y_pred_train=None, end_point: bool = False) -> pd.DataFrame | dict:
+def evaluation_metrics(
+    y_test, y_pred_test, y_train=None, y_pred_train=None, end_point: bool = False
+) -> pd.DataFrame | dict:
     test_score = {
         "r2": r2_score(y_test, y_pred_test),
         "rmse": root_mean_squared_error(y_test, y_pred_test),
@@ -62,7 +53,8 @@ def evaluation_metrics(y_test, y_pred_test, y_train=None, y_pred_train=None, end
         return result
     return pd.DataFrame(result)
 
-def reshape_comparing_df(comparing_dict:dict) -> pd.DataFrame:
+
+def reshape_comparing_df(comparing_dict: dict) -> pd.DataFrame:
     rows = []
 
     for model_name, scores in comparing_dict.items():
@@ -70,13 +62,15 @@ def reshape_comparing_df(comparing_dict:dict) -> pd.DataFrame:
             score_key = f"{split}_score"
             metrics = scores[score_key]
 
-            rows.append({
-                "model": model_name,
-                "split": split,
-                "r2": metrics["r2"],
-                "rmse": metrics["rmse"],
-                "mae": metrics["mae"],
-            })
+            rows.append(
+                {
+                    "model": model_name,
+                    "split": split,
+                    "r2": metrics["r2"],
+                    "rmse": metrics["rmse"],
+                    "mae": metrics["mae"],
+                }
+            )
 
     df_results = pd.DataFrame(rows)
     return df_results

@@ -1,14 +1,12 @@
 import pandas as pd
-
-from sklearn.pipeline import Pipeline
-
-from xgboost import XGBRegressor
 from catboost import CatBoostRegressor
 from lightgbm import LGBMRegressor
+from sklearn.pipeline import Pipeline
+from xgboost import XGBRegressor
 
-from bike_sharing_model.utils.helpers import create_train_test_df, evaluation_metrics
-from bike_sharing_model.data.preprocessor import create_preprocessing_pipeline
 from bike_sharing_model.config.core import RANDOM_STATE
+from bike_sharing_model.data.preprocessor import create_preprocessing_pipeline
+from bike_sharing_model.utils.helpers import create_train_test_df, evaluation_metrics
 
 
 def compare_between_models(df: pd.DataFrame) -> dict[str, dict]:
@@ -19,29 +17,23 @@ def compare_between_models(df: pd.DataFrame) -> dict[str, dict]:
 
     models = {
         "XGBRegressor": XGBRegressor(
-            random_state=RANDOM_STATE,
-            n_estimators=300,
-            learning_rate=0.05
+            random_state=RANDOM_STATE, n_estimators=300, learning_rate=0.05
         ),
-        "CatBoostRegressor": CatBoostRegressor(
-            verbose=0,
-            random_state=RANDOM_STATE
-        ),
-        "LGBMRegressor": LGBMRegressor(
-            random_state=RANDOM_STATE,
-            n_estimators=300
-        ),
+        "CatBoostRegressor": CatBoostRegressor(verbose=0, random_state=RANDOM_STATE),
+        "LGBMRegressor": LGBMRegressor(random_state=RANDOM_STATE, n_estimators=300),
     }
 
-    results:dict[str, dict] = {}
+    results: dict[str, dict] = {}
 
     for model_name, model in models.items():
         # Full model
-        pipeline = Pipeline([
-            ("rush_hours", rush_transformer),
-            ("preprocessing", preprocessor),
-            ("model", model),
-        ])
+        pipeline = Pipeline(
+            [
+                ("rush_hours", rush_transformer),
+                ("preprocessing", preprocessor),
+                ("model", model),
+            ]
+        )
         # Fitting it
         pipeline.fit(X_train, y_train)
 
