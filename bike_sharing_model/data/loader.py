@@ -1,7 +1,9 @@
+from pathlib import Path
+
 import pandas as pd
 
 
-def load_dataframe(path: str) -> pd.DataFrame:
+def load_dataframe(path: str | Path) -> pd.DataFrame:
     try:
         df = pd.read_csv(path)
         if df.empty or df.columns.size == 0:
