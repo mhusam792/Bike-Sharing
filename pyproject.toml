@@ -30,7 +30,8 @@ dependencies = [
     "black>=24.0",
     "ruff>=0.4",
     "mypy>=1.8",
-    "types-PyYAML"
+    "types-PyYAML",
+    "uvicorn[standard]>=0.29"
 ]
 
 
