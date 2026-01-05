@@ -1,22 +1,21 @@
 name: Docker CI for Bike Sharing API
 
-# متى يتنفذ الworkflow
 on:
   push:
-    branches: ["new_learning"]
+    branches: ["main"]
   pull_request:
-    branches: ["new_learning"]
+    branches: ["main"]
 
 jobs:
   docker-ci:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ نسخ الكود من GitHub
+      # 1️⃣ Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2️⃣ تثبيت Docker
+      # 2️⃣ Set up Docker
       - name: Set up Docker
         uses: docker/setup-buildx-action@v3
 
@@ -24,17 +23,26 @@ jobs:
       - name: Build Docker image
         run: docker build -t bike-api .
 
-      # 4️⃣ Run container للاختبار
+      # 4️⃣ Run container
       - name: Run container
         run: docker run -d -p 8089:8089 --name bike-api-test bike-api
 
-      # 5️⃣ Smoke test للتأكد إن الـ API شغالة
+      # 5️⃣ Smoke test with retry loop
       - name: Smoke test
         run: |
-          # نعمل curl على الـ /docs endpoint
-          curl -f http://localhost:8089/docs
+          for i in {1..20}; do
+            if curl -f http://localhost:8089/docs; then
+              echo "API is ready!"
+              exit 0
+            else
+              echo "Waiting for API..."
+              sleep 3
+            fi
+          done
+          echo "API failed to start in time"
+          exit 1
 
-      # 6️⃣ Stop and remove container بعد الاختبار
+      # 6️⃣ Clean up container
       - name: Clean up
         run: |
           docker stop bike-api-test
