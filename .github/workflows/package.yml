@@ -3,9 +3,9 @@ name: Docker CI for Bike Sharing API
 # متى يتنفذ الworkflow
 on:
   push:
-    branches: ["main"]
+    branches: ["new_learning"]
   pull_request:
-    branches: ["main"]
+    branches: ["new_learning"]
 
 jobs:
   docker-ci:
