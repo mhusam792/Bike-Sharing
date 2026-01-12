@@ -19,10 +19,12 @@ jobs:
             
             - name: Install Dependencies     
               run: | 
+                pip install --upgrade pip
                 make install_main_dep
                 make install_dev_dep
-                
+
             - name: Train main model
               run: train-bike
+
             - name: Make Prediction
               run: predict-bike
