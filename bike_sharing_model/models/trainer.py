@@ -14,6 +14,8 @@ from bike_sharing_model.data.preprocessor import create_preprocessing_pipeline
 from bike_sharing_model.models.evaluator import compare_between_models
 from bike_sharing_model.utils.helpers import create_train_test_df, reshape_comparing_df
 
+from typing import Optional, Dict, Any
+
 
 def create_best_model(
     df: pd.DataFrame,
@@ -48,20 +50,30 @@ def create_best_model(
     return result
 
 
-def run_training(end_point: bool = False) -> dict | None:
+def run_training(
+    end_point: bool = False, com_models: bool = False
+) -> Optional[Dict[str, Any]]:
+
     df = load_dataframe(path=TRAINING_DATA_FILE_PATH)
 
-    comparing_models = compare_between_models(df)
-    reshape_comp_df = reshape_comparing_df(comparing_models)
+    result: Dict[str, Any] = {}
+
+    # Compare models if requested
+    if com_models:
+        comparing_models = compare_between_models(df)
+        reshape_comp_df = reshape_comparing_df(comparing_models)
+
+        result["comparing_models"] = comparing_models
+
+        if not end_point:
+            print(pd.DataFrame(reshape_comp_df).set_index(["model", "split"]))
+
+    # Always train best model
     best_model_info = create_best_model(df)
+    result["best_model_info"] = best_model_info
 
-    if end_point:
-        return {
-            "comparing_models": comparing_models,
-            "best_model_info": best_model_info,
-        }
+    if not end_point:
+        print(pd.DataFrame.from_dict(best_model_info, orient="index"))
+        return None
 
-    print(pd.DataFrame(reshape_comp_df).set_index(["model", "split"]))
-    print(pd.DataFrame.from_dict(best_model_info, orient="index"))
-
-    return None
+    return result
