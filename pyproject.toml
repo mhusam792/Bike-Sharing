@@ -7,38 +7,38 @@ name = "bike-sharing-model"
 version = "0.1.0"
 description = "Bike Sharing Demand Regression Model (ML Engineering Project)"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = "==3.10.16"
 license = { text = "MIT" }
 authors = [
     { name = "Mohamed Hussam" }
 ]
 
-# Dependencies الأساسية للـ ML + API فقط
+# Main Dependencies
 dependencies = [
-    "numpy>=1.24",
-    "pandas>=2.0",
-    "scikit-learn>=1.3",
-    "xgboost>=2.0",
-    "catboost>=1.2",
-    "lightgbm>=4.0",
-    "feature-engine>=1.7.0",
-    "pyyaml>=6.0",
-    "joblib>=1.3",
-    "fastapi>=0.110",
-    "uvicorn[standard]>=0.29"
+    "numpy==2.0.1",
+    "pandas==2.2.3",
+    "scikit-learn==1.6.1",
+    "catboost==1.2.8",
+    "feature-engine==1.9.3",
+    "pyyaml==6.0.2",
+    "joblib==1.4.2",
+    "fastapi==0.115.12",
+    "uvicorn[standard]==0.34.2"
 ]
 
-# Dev dependencies (اختياري)
+# Dev Dependencies
 [project.optional-dependencies]
 dev = [
-    "flake8",
-    "isort",
-    "pytest>=7.4",
-    "pytest-cov>=4.1",
-    "black>=24.0",
-    "ruff>=0.4",
-    "mypy>=1.8",
-    "types-PyYAML"
+    "lightgbm==4.6.0",
+    "xgboost==3.0.4",
+    "flake8==7.3.0",
+    "isort==7.0.0",
+    "pytest==9.0.2",
+    "pytest-cov==7.0.0",
+    "black==25.12.0",
+    "ruff==0.14.10",
+    "mypy==1.19.1",
+    "types-PyYAML==6.0.12.20250915"
 ]
 
 # Scripts
