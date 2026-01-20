@@ -11,8 +11,7 @@ from bike_sharing_model.config.core import (
 )
 from bike_sharing_model.data.loader import load_dataframe
 from bike_sharing_model.data.preprocessor import create_preprocessing_pipeline
-from bike_sharing_model.models.evaluator import compare_between_models
-from bike_sharing_model.utils.helpers import create_train_test_df, reshape_comparing_df
+from bike_sharing_model.utils.helpers import create_train_test_df
 
 from typing import Optional, Dict, Any
 
@@ -57,16 +56,6 @@ def run_training(
     df = load_dataframe(path=TRAINING_DATA_FILE_PATH)
 
     result: Dict[str, Any] = {}
-
-    # Compare models if requested
-    if com_models:
-        comparing_models = compare_between_models(df)
-        reshape_comp_df = reshape_comparing_df(comparing_models)
-
-        result["comparing_models"] = comparing_models
-
-        if not end_point:
-            print(pd.DataFrame(reshape_comp_df).set_index(["model", "split"]))
 
     # Always train best model
     best_model_info = create_best_model(df)
