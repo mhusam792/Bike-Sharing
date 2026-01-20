@@ -11,7 +11,8 @@ from bike_sharing_model.config.core import (
 )
 from bike_sharing_model.data.loader import load_dataframe
 from bike_sharing_model.data.preprocessor import create_preprocessing_pipeline
-from bike_sharing_model.utils.helpers import create_train_test_df
+from bike_sharing_model.utils.helpers import create_train_test_df, reshape_comparing_df
+from bike_sharing_model.models.evaluator import model_accuracy
 
 from typing import Optional, Dict, Any
 
@@ -50,12 +51,22 @@ def create_best_model(
 
 
 def run_training(
-    end_point: bool = False, com_models: bool = False
+    end_point: bool = False, show_accuracy: bool = False
 ) -> Optional[Dict[str, Any]]:
 
     df = load_dataframe(path=TRAINING_DATA_FILE_PATH)
 
     result: Dict[str, Any] = {}
+
+    # Compare models if requested
+    if show_accuracy:
+        model_acc = model_accuracy(df)
+        reshape_comp_df = reshape_comparing_df(model_acc)
+
+        result["model_accuracy"] = model_acc
+
+        if not end_point:
+            print(pd.DataFrame(reshape_comp_df).set_index(["model", "split"]))
 
     # Always train best model
     best_model_info = create_best_model(df)

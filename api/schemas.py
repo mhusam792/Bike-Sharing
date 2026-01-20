@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict
 
 from pydantic import BaseModel
 
@@ -15,25 +15,13 @@ class ModelComparison(BaseModel):
 
 
 class TrainingResponse(BaseModel):
-    comparing_models: Dict[str, ModelComparison]
+    model_accuracy: Dict[str, ModelComparison]
     best_model_info: Dict[str, str]
 
     model_config = {
         "json_schema_extra": {
             "example": {
-                "comparing_models": {
-                    "XGBRegressor": {
-                        "test_score": {
-                            "r2": 0.9698052406311035,
-                            "rmse": 29.01019287109375,
-                            "mae": 19.430381774902344,
-                        },
-                        "train_score": {
-                            "r2": 0.8900954723358154,
-                            "rmse": 73.09478759765625,
-                            "mae": 49.23468780517578,
-                        },
-                    },
+                "model_accuracy": {
                     "CatBoostRegressor": {
                         "test_score": {
                             "r2": 0.9737885408445598,
@@ -44,18 +32,6 @@ class TrainingResponse(BaseModel):
                             "r2": 0.9198375595779287,
                             "rmse": 62.425805334940804,
                             "mae": 41.26206599226589,
-                        },
-                    },
-                    "LGBMRegressor": {
-                        "test_score": {
-                            "r2": 0.9762889999318385,
-                            "rmse": 25.7074986777784,
-                            "mae": 17.043272842683464,
-                        },
-                        "train_score": {
-                            "r2": 0.912388637407682,
-                            "rmse": 65.26177867716812,
-                            "mae": 43.20901531632474,
                         },
                     },
                 },
