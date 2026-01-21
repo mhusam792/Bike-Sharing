@@ -49,7 +49,7 @@ def model_accuracy(df: pd.DataFrame) -> dict[str, dict]:
 
         # Dictionary of scores metrics
         results[model_name] = evaluation_metrics(
-            y_train, y_pred_train, y_test, y_pred_test, end_point=True
+            y_test, y_pred_test, y_train, y_pred_train, end_point=True
         )
 
     return results
