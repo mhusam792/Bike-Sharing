@@ -29,8 +29,7 @@ features:
   - atemp
   - hum
   - windspeed
-  - registered
-  - casual
+
 
 # Cyclical Features
 cyclical_cols:
@@ -52,8 +51,7 @@ cat_cols:
 
 # Make new features from existing features
 new_features:
-  - casual
-  - registered
+  - cnt
 
 # Set train/test split
 split:
