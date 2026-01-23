@@ -50,8 +50,9 @@ cat_cols:
   - weathersit
 
 # Make new features from existing features
-new_features:
-  - cnt
+# new_features:
+#   -
+#   -
 
 # Set train/test split
 split:

@@ -15,7 +15,7 @@ def model_accuracy(df: pd.DataFrame) -> dict[str, dict]:
 
     X_train, X_test, y_train, y_test = create_train_test_df(df)
 
-    rush_transformer, preprocessor = create_preprocessing_pipeline()
+    preprocessor = create_preprocessing_pipeline()
 
     # models = {
     #     "XGBRegressor": XGBRegressor(
@@ -28,6 +28,7 @@ def model_accuracy(df: pd.DataFrame) -> dict[str, dict]:
     models = {
         "CatBoostRegressor": CatBoostRegressor(verbose=0, random_state=RANDOM_STATE),
     }
+    
 
     results: dict[str, dict] = {}
 
@@ -35,7 +36,6 @@ def model_accuracy(df: pd.DataFrame) -> dict[str, dict]:
         # Full model
         pipeline = Pipeline(
             [
-                ("rush_hours", rush_transformer),
                 ("preprocessing", preprocessor),
                 ("model", model),
             ]
@@ -49,7 +49,7 @@ def model_accuracy(df: pd.DataFrame) -> dict[str, dict]:
 
         # Dictionary of scores metrics
         results[model_name] = evaluation_metrics(
-            y_train, y_pred_train, y_test, y_pred_test, end_point=True
+            y_test, y_pred_test, y_train, y_pred_train, end_point=True
         )
 
     return results

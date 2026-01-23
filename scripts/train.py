@@ -1,4 +1,4 @@
 from bike_sharing_model.models.trainer import run_training
 
 if __name__ == "__main__":
-    run_training()
+    run_training(show_accuracy=True)
