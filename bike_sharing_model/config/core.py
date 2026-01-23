@@ -19,17 +19,15 @@ def load_config_from_package() -> dict:
 
 DATA_CONFIG = ValidateInputs(**load_config_from_package())
 
+ARTIFACTS_ROOT = Path(DATA_CONFIG.artifacts_root).resolve()
 
-Base_DIR = Path.cwd()
+DATASET_DIR = ARTIFACTS_ROOT / "datasets"
 
-# Directory Paths for Datasets, Predictions and Trained Models
-DATASET_DIR = Base_DIR / "datasets"
-
-PREDICTION_DIR = Base_DIR / "outputs"
-PREDICTION_DIR.mkdir(parents=True, exist_ok=True)
-
-TRAINED_MODEL_DIR = Base_DIR / "models"
+TRAINED_MODEL_DIR = ARTIFACTS_ROOT / "models"
 TRAINED_MODEL_DIR.mkdir(parents=True, exist_ok=True)
+
+PREDICTION_DIR = ARTIFACTS_ROOT / "outputs"
+PREDICTION_DIR.mkdir(parents=True, exist_ok=True)
 
 
 # Reading Train, Test Datafiles and save predictions to specific path

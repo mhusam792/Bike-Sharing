@@ -5,6 +5,7 @@ from sklearn.pipeline import Pipeline
 
 from bike_sharing_model.config.core import RANDOM_STATE
 from bike_sharing_model.data.preprocessor import create_preprocessing_pipeline
+from bike_sharing_model.features.feature_engineering import RushHourTransformer
 from bike_sharing_model.utils.helpers import create_train_test_df, evaluation_metrics
 
 
@@ -15,10 +16,10 @@ def model_accuracy(df: pd.DataFrame) -> dict[str, dict]:
     preprocessor = create_preprocessing_pipeline()
 
     # models = {
+    #     "CatBoostRegressor": CatBoostRegressor(verbose=0, random_state=RANDOM_STATE),
     #     "XGBRegressor": XGBRegressor(
     #         random_state=RANDOM_STATE, n_estimators=300, learning_rate=0.05
     #     ),
-    #     "CatBoostRegressor": CatBoostRegressor(verbose=0, random_state=RANDOM_STATE),
     #     "LGBMRegressor": LGBMRegressor(random_state=RANDOM_STATE, n_estimators=300),
     # }
 
@@ -32,6 +33,10 @@ def model_accuracy(df: pd.DataFrame) -> dict[str, dict]:
         # Full model
         pipeline = Pipeline(
             [
+                (
+                    "rush_hours",
+                    RushHourTransformer(variables=["hr"], target="cnt", top_n=5),
+                ),
                 ("preprocessing", preprocessor),
                 ("model", model),
             ]

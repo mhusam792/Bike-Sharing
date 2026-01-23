@@ -43,3 +43,6 @@ class ValidateInputs(BaseModel):
     # Pipeline name and saved path
     pipeline_name: str
     pipeline_save_file: str
+
+    # Artifacts root
+    artifacts_root: str

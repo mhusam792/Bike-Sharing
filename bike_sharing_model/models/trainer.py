@@ -13,6 +13,8 @@ from bike_sharing_model.data.loader import load_dataframe
 from bike_sharing_model.data.preprocessor import create_preprocessing_pipeline
 from bike_sharing_model.utils.helpers import create_train_test_df, reshape_comparing_df
 from bike_sharing_model.models.evaluator import model_accuracy
+from bike_sharing_model.features.feature_engineering import RushHourTransformer
+
 
 from typing import Optional, Dict, Any
 
@@ -36,7 +38,10 @@ def create_best_model(
 
     best_model_pipeline = Pipeline(
         [
-            # ("rush_hrs", rush_transformer),
+            (
+                "rush_hours",
+                RushHourTransformer(variables=["hr"], target="cnt", top_n=5),
+            ),
             ("preprocessing", ct),
             ("model", CatBoostRegressor(verbose=0, random_state=RANDOM_STATE)),
         ]
