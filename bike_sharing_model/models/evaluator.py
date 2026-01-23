@@ -1,10 +1,7 @@
 import pandas as pd
 from catboost import CatBoostRegressor
 
-# from lightgbm import LGBMRegressor
 from sklearn.pipeline import Pipeline
-
-# from xgboost import XGBRegressor
 
 from bike_sharing_model.config.core import RANDOM_STATE
 from bike_sharing_model.data.preprocessor import create_preprocessing_pipeline
@@ -28,7 +25,6 @@ def model_accuracy(df: pd.DataFrame) -> dict[str, dict]:
     models = {
         "CatBoostRegressor": CatBoostRegressor(verbose=0, random_state=RANDOM_STATE),
     }
-    
 
     results: dict[str, dict] = {}
 
