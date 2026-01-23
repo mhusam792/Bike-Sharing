@@ -1,3 +1,4 @@
+from importlib import resources
 from pathlib import Path
 
 import yaml
@@ -11,12 +12,12 @@ def load_config(path):
         return yaml.safe_load(f)
 
 
-# Package and Root Path
-PACKAGE_ROOT = Path(bike_sharing_model.__file__).resolve().parent
+def load_config_from_package() -> dict:
+    with resources.open_text("bike_sharing_model.configs", "data.yml") as f:
+        return yaml.safe_load(f)
 
-# Reading Configrations from data.yml file
-DATA_CONFIG_PATH = PACKAGE_ROOT / "configs" / "data.yml"
-DATA_CONFIG = ValidateInputs(**load_config(DATA_CONFIG_PATH))
+
+DATA_CONFIG = ValidateInputs(**load_config_from_package())
 
 
 Base_DIR = Path.cwd()

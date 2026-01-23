@@ -35,7 +35,7 @@ class ValidateInputs(BaseModel):
     cat_cols: List[str]
 
     # Make new features from existing features
-    new_features: List[str]
+    new_features: Optional[List[str]] = None
 
     # Set train/test split
     split: Split

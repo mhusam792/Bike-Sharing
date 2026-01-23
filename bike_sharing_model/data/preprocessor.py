@@ -3,10 +3,11 @@ from functools import partial
 from feature_engine.creation import CyclicalFeatures
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import FunctionTransformer, OneHotEncoder, StandardScaler
+from sklearn.preprocessing import OneHotEncoder, StandardScaler  # , FunctionTransformer
 
 from bike_sharing_model.config.core import DATA_CONFIG
-from bike_sharing_model.features.feature_engineering import get_rush_hours
+
+# from bike_sharing_model.features.feature_engineering import get_rush_hours
 
 CYCLICAL_FEATURES = DATA_CONFIG.cyclical_cols
 NUMERICAL_FEATURES = DATA_CONFIG.num_cols
@@ -31,8 +32,8 @@ def create_preprocessing_pipeline():
         remainder="passthrough",
     ).set_output(transform="pandas")
 
-    rush_transformer = FunctionTransformer(
-        func=partial(get_rush_hours, variables=NEW_FEATURES), validate=False
-    )
+    # rush_transformer = FunctionTransformer(
+    #     func=partial(get_rush_hours, variables=NEW_FEATURES), validate=False
+    # )
 
-    return rush_transformer, preprocessor
+    return preprocessor  # ,rush_transformer

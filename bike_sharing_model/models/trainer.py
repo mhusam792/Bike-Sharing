@@ -32,11 +32,11 @@ def create_best_model(
 
     result["test_csv_path"] = str(TESTING_DATA_FILE_PATH)
 
-    rush_transformer, ct = create_preprocessing_pipeline()
+    ct = create_preprocessing_pipeline()
 
     best_model_pipeline = Pipeline(
         [
-            ("rush_hrs", rush_transformer),
+            # ("rush_hrs", rush_transformer),
             ("preprocessing", ct),
             ("model", CatBoostRegressor(verbose=0, random_state=RANDOM_STATE)),
         ]
