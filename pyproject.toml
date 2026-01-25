@@ -25,7 +25,8 @@ dependencies = [
     "fastapi==0.115.12",
     "uvicorn[standard]==0.34.2",
     "dvc==3.66.1",
-    "dagshub==0.6.4"
+    "dagshub==0.6.4",
+    "dvc[s3]"
 ]
 
 # Dev Dependencies
