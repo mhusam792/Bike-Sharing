@@ -1,0 +1,118 @@
+# data.yml
+package_name: bike_sharing_reg
+
+# Data Files
+training_data_file: hour.csv
+test_data_file: test_split.csv
+
+# Target
+target: cnt
+
+# Features
+features:
+  - season
+  - yr
+  - mnth
+  - hr
+  - holiday
+  - weekday
+  - workingday
+  - weathersit
+  - temp
+  - atemp
+  - hum
+  - windspeed
+
+# Feature Groups
+cyclical_cols:
+  - season
+  - mnth
+  - weekday
+  - hr
+
+num_cols:
+  - temp
+  - atemp
+  - hum
+  - windspeed
+
+cat_cols:
+  - weathersit
+
+# Train / Test Split
+split:
+  test_size: 0.2
+  random_state: 42
+
+# Artifacts
+artifacts_root: .
+
+# model.yml
+# Model Metadata
+model:
+  name: catboost_regressor
+  version: v2.0.0
+  framework: catboost
+  task: regression
+  target: cnt
+
+# Training Info
+training:
+  trained_at: 2026-01-23
+  trained_by: Mohamed Hussam
+  time_series_aware: true
+  validation_strategy: TimeSeriesSplit
+  n_splits: 5
+  random_state: 42
+
+# Features Used
+features:
+  numerical:
+    - temp
+    - atemp
+    - hum
+    - windspeed
+
+  categorical:
+    - weathersit
+
+  cyclical:
+    - season
+    - mnth
+    - weekday
+    - hr
+
+  engineered:
+    - rush_hour_hr   # لو رجّعته مستقبلاً
+
+# Model Hyperparameters
+hyperparameters:
+  iterations: 500
+  learning_rate: 0.05
+  depth: 6
+  loss_function: RMSE
+
+# Evaluation Metrics
+metrics:
+  train:
+    r2: 0.925
+    rmse: 45.57
+    mae: 30.42
+
+  test:
+    r2: 0.676
+    rmse: 125.49
+    mae: 89.89
+
+# Model Artifacts
+artifacts:
+  model_path: models/catboost_regressor_v2.0.0.pkl
+  pipeline_path: models/catboost_pipeline_v2.0.0.pkl
+
+# Notes
+notes:
+  - Data leakage issue resolved using time-aware splitting
+  - Rush hour feature removed due to target leakage
+  - Model accuracy dropped but generalization improved
+
+
