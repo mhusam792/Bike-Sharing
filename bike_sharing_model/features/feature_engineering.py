@@ -14,7 +14,6 @@ class RushHourTransformer(BaseEstimator, TransformerMixin):
             raise ValueError("y must be provided for RushHourTransformer fit")
 
         for var in self.variables:
-            # نستخدم y مباشرة بدل ما نبحث عن self.target في X
             temp_df = pd.DataFrame({var: X[var], self.target: y})
             top_hours = (
                 temp_df.groupby(var)[self.target]

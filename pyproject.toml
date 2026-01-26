@@ -47,7 +47,7 @@ dev = [
 
 # Scripts
 [project.scripts]
-train-bike = "scripts.train:run_training"
+train-bike = "scripts.train:run_training_with_mlflow"
 predict-bike = "scripts.predict:run_prediction"
 
 # Package data
