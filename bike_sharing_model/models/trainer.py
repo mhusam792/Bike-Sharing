@@ -24,42 +24,6 @@ from typing import Optional, Dict, Any
 import mlflow
 
 
-# def create_best_model(
-#     df: pd.DataFrame,
-#     save_path=TRAINED_MODEL_PATH,
-# ) -> dict:
-
-#     result = dict()
-
-#     X_train, X_test, y_train, y_test = create_train_test_df(df=df)
-
-#     test_df = X_test.copy()
-#     test_df["cnt"] = y_test.values
-#     test_df.to_csv(TESTING_DATA_FILE_PATH, index=False)
-
-#     result["test_csv_path"] = str(TESTING_DATA_FILE_PATH)
-
-#     ct = create_preprocessing_pipeline()
-
-#     best_model_pipeline = Pipeline(
-#         [
-#             (
-#                 "rush_hours",
-#                 RushHourTransformer(variables=["hr"], target="cnt", top_n=5),
-#             ),
-#             ("preprocessing", ct),
-#             ("model", CatBoostRegressor(verbose=0, random_state=RANDOM_STATE)),
-#         ]
-#     )
-
-#     best_model_pipeline.fit(X_train, y_train)
-
-#     joblib.dump(best_model_pipeline, f"{save_path}")
-#     result["saved_model_path"] = str(save_path)
-
-#     return result
-
-
 def create_best_model(
     df: pd.DataFrame,
     save_path=TRAINED_MODEL_PATH,
@@ -120,7 +84,6 @@ def create_best_model(
             }
         )
 
-        # ===== Log params =====
         mlflow.log_params(
             {
                 "model": "CatBoostRegressor",
@@ -129,11 +92,9 @@ def create_best_model(
             }
         )
 
-        # ===== Save locally =====
         joblib.dump(best_model_pipeline, save_path)
         result["saved_model_path"] = str(save_path)
 
-        # ===== Log model to MLflow =====
         mlflow.sklearn.log_model(
             sk_model=best_model_pipeline,
             artifact_path="best_model",
