@@ -11,12 +11,53 @@ from bike_sharing_model.config.core import (
 )
 from bike_sharing_model.data.loader import load_dataframe
 from bike_sharing_model.data.preprocessor import create_preprocessing_pipeline
-from bike_sharing_model.utils.helpers import create_train_test_df, reshape_comparing_df
+from bike_sharing_model.utils.helpers import (
+    create_train_test_df,
+    evaluation_metrics,
+    reshape_comparing_df,
+)
 from bike_sharing_model.models.evaluator import model_accuracy
 from bike_sharing_model.features.feature_engineering import RushHourTransformer
 
 
 from typing import Optional, Dict, Any
+import mlflow
+
+
+# def create_best_model(
+#     df: pd.DataFrame,
+#     save_path=TRAINED_MODEL_PATH,
+# ) -> dict:
+
+#     result = dict()
+
+#     X_train, X_test, y_train, y_test = create_train_test_df(df=df)
+
+#     test_df = X_test.copy()
+#     test_df["cnt"] = y_test.values
+#     test_df.to_csv(TESTING_DATA_FILE_PATH, index=False)
+
+#     result["test_csv_path"] = str(TESTING_DATA_FILE_PATH)
+
+#     ct = create_preprocessing_pipeline()
+
+#     best_model_pipeline = Pipeline(
+#         [
+#             (
+#                 "rush_hours",
+#                 RushHourTransformer(variables=["hr"], target="cnt", top_n=5),
+#             ),
+#             ("preprocessing", ct),
+#             ("model", CatBoostRegressor(verbose=0, random_state=RANDOM_STATE)),
+#         ]
+#     )
+
+#     best_model_pipeline.fit(X_train, y_train)
+
+#     joblib.dump(best_model_pipeline, f"{save_path}")
+#     result["saved_model_path"] = str(save_path)
+
+#     return result
 
 
 def create_best_model(
@@ -24,33 +65,80 @@ def create_best_model(
     save_path=TRAINED_MODEL_PATH,
 ) -> dict:
 
-    result = dict()
+    result = {}
 
-    X_train, X_test, y_train, y_test = create_train_test_df(df=df)
+    mlflow.set_tracking_uri("http://127.0.0.1:5000")
+    mlflow.set_experiment("bike-sharing-training")
 
-    test_df = X_test.copy()
-    test_df["cnt"] = y_test.values
-    test_df.to_csv(TESTING_DATA_FILE_PATH, index=False)
+    with mlflow.start_run(run_name="best-model-training"):
 
-    result["test_csv_path"] = str(TESTING_DATA_FILE_PATH)
+        X_train, X_test, y_train, y_test = create_train_test_df(df=df)
 
-    ct = create_preprocessing_pipeline()
+        test_df = X_test.copy()
+        test_df["cnt"] = y_test.values
+        test_df.to_csv(TESTING_DATA_FILE_PATH, index=False)
 
-    best_model_pipeline = Pipeline(
-        [
-            (
-                "rush_hours",
-                RushHourTransformer(variables=["hr"], target="cnt", top_n=5),
-            ),
-            ("preprocessing", ct),
-            ("model", CatBoostRegressor(verbose=0, random_state=RANDOM_STATE)),
-        ]
-    )
+        result["test_csv_path"] = str(TESTING_DATA_FILE_PATH)
+        mlflow.log_artifact(result["test_csv_path"])
 
-    best_model_pipeline.fit(X_train, y_train)
+        ct = create_preprocessing_pipeline()
 
-    joblib.dump(best_model_pipeline, f"{save_path}")
-    result["saved_model_path"] = str(save_path)
+        best_model_pipeline = Pipeline(
+            [
+                (
+                    "rush_hours",
+                    RushHourTransformer(variables=["hr"], target="cnt", top_n=5),
+                ),
+                ("preprocessing", ct),
+                (
+                    "model",
+                    CatBoostRegressor(
+                        verbose=0,
+                        random_state=RANDOM_STATE,
+                    ),
+                ),
+            ]
+        )
+
+        best_model_pipeline.fit(X_train, y_train)
+
+        y_pred_train = best_model_pipeline.predict(X_train)
+        y_pred_test = best_model_pipeline.predict(X_test)
+
+        metrics = evaluation_metrics(
+            y_test, y_pred_test, y_train, y_pred_train, end_point=True
+        )
+
+        mlflow.log_metrics(
+            {
+                "r2_test": metrics["test_score"]["r2"],
+                "rmse_test": metrics["test_score"]["rmse"],
+                "mae_test": metrics["test_score"]["mae"],
+                "r2_train": metrics["train_score"]["r2"],
+                "rmse_train": metrics["train_score"]["rmse"],
+                "mae_train": metrics["train_score"]["mae"],
+            }
+        )
+
+        # ===== Log params =====
+        mlflow.log_params(
+            {
+                "model": "CatBoostRegressor",
+                "random_state": RANDOM_STATE,
+                "rush_hour_top_n": 5,
+            }
+        )
+
+        # ===== Save locally =====
+        joblib.dump(best_model_pipeline, save_path)
+        result["saved_model_path"] = str(save_path)
+
+        # ===== Log model to MLflow =====
+        mlflow.sklearn.log_model(
+            sk_model=best_model_pipeline,
+            artifact_path="best_model",
+            registered_model_name="bike_sharing_demand_model",
+        )
 
     return result
 

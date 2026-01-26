@@ -11,3 +11,8 @@ outputs/
 build
 .pytest_cache
 .ruff_cache
+
+# MLflow
+mlruns/
+mlartifacts/
+mlflow.db

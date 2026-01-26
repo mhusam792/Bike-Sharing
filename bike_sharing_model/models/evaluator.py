@@ -1,12 +1,16 @@
+from lightgbm import LGBMRegressor
 import pandas as pd
 from catboost import CatBoostRegressor
 
 from sklearn.pipeline import Pipeline
+from xgboost import XGBRegressor
 
 from bike_sharing_model.config.core import RANDOM_STATE
 from bike_sharing_model.data.preprocessor import create_preprocessing_pipeline
 from bike_sharing_model.features.feature_engineering import RushHourTransformer
 from bike_sharing_model.utils.helpers import create_train_test_df, evaluation_metrics
+
+import mlflow
 
 
 def model_accuracy(df: pd.DataFrame) -> dict[str, dict]:
@@ -15,42 +19,59 @@ def model_accuracy(df: pd.DataFrame) -> dict[str, dict]:
 
     preprocessor = create_preprocessing_pipeline()
 
-    # models = {
-    #     "CatBoostRegressor": CatBoostRegressor(verbose=0, random_state=RANDOM_STATE),
-    #     "XGBRegressor": XGBRegressor(
-    #         random_state=RANDOM_STATE, n_estimators=300, learning_rate=0.05
-    #     ),
-    #     "LGBMRegressor": LGBMRegressor(random_state=RANDOM_STATE, n_estimators=300),
-    # }
-
     models = {
         "CatBoostRegressor": CatBoostRegressor(verbose=0, random_state=RANDOM_STATE),
+        "XGBRegressor": XGBRegressor(
+            random_state=RANDOM_STATE, n_estimators=300, learning_rate=0.05
+        ),
+        "LGBMRegressor": LGBMRegressor(random_state=RANDOM_STATE, n_estimators=300),
     }
+
+    # models = {
+    #     "CatBoostRegressor": CatBoostRegressor(verbose=0, random_state=RANDOM_STATE),
+    # }
 
     results: dict[str, dict] = {}
 
-    for model_name, model in models.items():
-        # Full model
-        pipeline = Pipeline(
-            [
-                (
-                    "rush_hours",
-                    RushHourTransformer(variables=["hr"], target="cnt", top_n=5),
-                ),
-                ("preprocessing", preprocessor),
-                ("model", model),
-            ]
-        )
-        # Fitting it
-        pipeline.fit(X_train, y_train)
+    mlflow.set_tracking_uri("http://127.0.0.1:5000")
+    mlflow.set_experiment("bike-sharing-training")
+    with mlflow.start_run(run_name="Compare models"):
 
-        # Get predictions for train and test
-        y_pred_train = pipeline.predict(X_train)
-        y_pred_test = pipeline.predict(X_test)
+        for model_name, model in models.items():
+            # Full model
+            pipeline = Pipeline(
+                [
+                    (
+                        "rush_hours",
+                        RushHourTransformer(variables=["hr"], target="cnt", top_n=5),
+                    ),
+                    ("preprocessing", preprocessor),
+                    ("model", model),
+                ]
+            )
 
-        # Dictionary of scores metrics
-        results[model_name] = evaluation_metrics(
-            y_test, y_pred_test, y_train, y_pred_train, end_point=True
-        )
+            # Fitting it
+            pipeline.fit(X_train, y_train)
+            model_info = mlflow.sklearn.log_model(sk_model=pipeline, name=model_name)
 
-    return results
+            # Get predictions for train and test
+            y_pred_train = pipeline.predict(X_train)
+            y_pred_test = pipeline.predict(X_test)
+
+            # Dictionary of scores metrics
+            results[model_name] = evaluation_metrics(
+                y_test, y_pred_test, y_train, y_pred_train, end_point=True
+            )
+
+            loged_metrices = {
+                "r2_test": results[model_name]["test_score"]["r2"],
+                "rmse_test": results[model_name]["test_score"]["rmse"],
+                "mae_test": results[model_name]["test_score"]["mae"],
+                "r2_train": results[model_name]["train_score"]["r2"],
+                "rmse_train": results[model_name]["train_score"]["rmse"],
+                "mae_train": results[model_name]["train_score"]["mae"],
+            }
+
+            mlflow.log_metrics(metrics=loged_metrices)
+
+        return results
