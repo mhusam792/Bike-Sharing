@@ -98,7 +98,7 @@ def create_best_model(
 
         mlflow.sklearn.log_model(
             sk_model=best_model_pipeline,
-            artifact_path="best_model",
+            name="best_model",
             registered_model_name="bike_sharing_demand_model",
         )
 
