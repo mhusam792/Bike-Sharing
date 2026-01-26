@@ -21,7 +21,10 @@ from bike_sharing_model.features.feature_engineering import RushHourTransformer
 
 
 from typing import Optional, Dict, Any
+import dagshub
 import mlflow
+
+dagshub.init(repo_owner="Mohamed_Hussam", repo_name="Bike-Sharing", mlflow=True)
 
 
 def create_best_model(
