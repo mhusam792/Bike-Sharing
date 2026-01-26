@@ -19,12 +19,11 @@ from bike_sharing_model.utils.helpers import (
 from bike_sharing_model.models.evaluator import model_accuracy
 from bike_sharing_model.features.feature_engineering import RushHourTransformer
 
-
 from typing import Optional, Dict, Any
 import dagshub
 import mlflow
 
-dagshub.init(repo_owner="Mohamed_Hussam", repo_name="Bike-Sharing", mlflow=True)
+
 
 
 def create_best_model(
@@ -34,9 +33,8 @@ def create_best_model(
 
     result = {}
 
-    mlflow.set_tracking_uri("http://127.0.0.1:5000")
+    dagshub.init(repo_owner="Mohamed_Hussam", repo_name="Bike-Sharing", mlflow=True)
     mlflow.set_experiment("bike-sharing-training")
-
     with mlflow.start_run(run_name="best-model-training"):
 
         X_train, X_test, y_train, y_test = create_train_test_df(df=df)
