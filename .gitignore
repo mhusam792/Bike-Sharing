@@ -16,3 +16,8 @@ build
 mlruns/
 mlartifacts/
 mlflow.db
+models/
+
+# scripts/test
+scripts/
+tests/
