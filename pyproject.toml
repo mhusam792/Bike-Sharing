@@ -45,10 +45,6 @@ dev = [
     "types-PyYAML==6.0.12.20250915"
 ]
 
-# # Scripts
-# [project.scripts]
-# train-bike = "scripts.train:run_training_with_mlflow"
-# predict-bike = "scripts.predict:run_prediction"
 
 # Package data
 [tool.setuptools]
