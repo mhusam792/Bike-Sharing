@@ -34,7 +34,8 @@ def model_accuracy(df: pd.DataFrame) -> dict[str, dict]:
 
     results: dict[str, dict] = {}
 
-    dagshub.init(repo_owner="Mohamed_Hussam", repo_name="Bike-Sharing", mlflow=True)
+    mlflow.set_tracking_uri("http://localhost:5000")
+    # dagshub.init(repo_owner="Mohamed_Hussam", repo_name="Bike-Sharing", mlflow=True)
     mlflow.set_experiment("bike-sharing-training")
     with mlflow.start_run(run_name="Compare models"):
 

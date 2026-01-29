@@ -1,21 +1,14 @@
 # data.yml
-# Package Overview
 package_name: bike_sharing_reg
 
 # Data Files
 training_data_file: hour.csv
 test_data_file: test_split.csv
 
-# Trained Model
-trained_model_path: 
-
-# Variables
-# The variable we are attempting to predict (cnt)
+# Target
 target: cnt
 
-pipeline_name: catboost_regressor_model
-pipeline_save_file: catboost_regressor_model_output_v
-
+# Features
 features:
   - season
   - yr
@@ -29,7 +22,6 @@ features:
   - atemp
   - hum
   - windspeed
-
 
 # Cyclical Features
 cyclical_cols:
@@ -49,12 +41,7 @@ num_cols:
 cat_cols:
   - weathersit
 
-# Make new features from existing features
-# new_features:
-#   -
-#   -
-
-# Set train/test split
+# Train/Test split
 split:
   test_size: 0.2
   random_state: 42

@@ -1,4 +1,3 @@
-import joblib
 import pandas as pd
 from catboost import CatBoostRegressor
 from sklearn.pipeline import Pipeline
@@ -6,7 +5,6 @@ from sklearn.pipeline import Pipeline
 from bike_sharing_model.config.core import (
     RANDOM_STATE,
     TESTING_DATA_FILE_PATH,
-    TRAINED_MODEL_PATH,
     TRAINING_DATA_FILE_PATH,
 )
 from bike_sharing_model.data.loader import load_dataframe
@@ -24,16 +22,14 @@ import dagshub
 import mlflow
 
 
-
-
 def create_best_model(
     df: pd.DataFrame,
-    save_path=TRAINED_MODEL_PATH,
 ) -> dict:
 
     result = {}
 
-    dagshub.init(repo_owner="Mohamed_Hussam", repo_name="Bike-Sharing", mlflow=True)
+    # dagshub.init(repo_owner="Mohamed_Hussam", repo_name="Bike-Sharing", mlflow=True)
+    mlflow.set_tracking_uri("http://localhost:5000")
     mlflow.set_experiment("bike-sharing-training")
     with mlflow.start_run(run_name="best-model-training"):
 
@@ -92,9 +88,6 @@ def create_best_model(
                 "rush_hour_top_n": 5,
             }
         )
-
-        joblib.dump(best_model_pipeline, save_path)
-        result["saved_model_path"] = str(save_path)
 
         mlflow.sklearn.log_model(
             sk_model=best_model_pipeline,

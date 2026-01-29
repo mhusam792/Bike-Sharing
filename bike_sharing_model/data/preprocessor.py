@@ -8,7 +8,6 @@ from bike_sharing_model.config.core import DATA_CONFIG
 CYCLICAL_FEATURES = DATA_CONFIG.cyclical_cols
 NUMERICAL_FEATURES = DATA_CONFIG.num_cols
 CATEGORICAL_FEATURES = DATA_CONFIG.cat_cols
-NEW_FEATURES = DATA_CONFIG.new_features
 
 
 def create_preprocessing_pipeline():

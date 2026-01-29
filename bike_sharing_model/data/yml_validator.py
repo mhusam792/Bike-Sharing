@@ -16,9 +16,6 @@ class ValidateInputs(BaseModel):
     training_data_file: str
     test_data_file: str
 
-    # Trained model path
-    trained_model_path: Optional[str]
-
     ## Variables / Features
     # The variable we are attempting to predict (cnt)
     target: str
@@ -34,15 +31,8 @@ class ValidateInputs(BaseModel):
     # Categorical Features
     cat_cols: List[str]
 
-    # Make new features from existing features
-    new_features: Optional[List[str]] = None
-
     # Set train/test split
     split: Split
-
-    # Pipeline name and saved path
-    pipeline_name: str
-    pipeline_save_file: str
 
     # Artifacts root
     artifacts_root: str

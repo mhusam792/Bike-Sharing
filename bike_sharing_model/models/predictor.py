@@ -1,26 +1,35 @@
-import joblib
 import pandas as pd
+import mlflow
 
 from bike_sharing_model.config.core import (
     PREDICTION_PATH_FILE,
     TESTING_DATA_FILE_PATH,
-    TRAINED_MODEL_PATH,
 )
 from bike_sharing_model.data.loader import load_dataframe
 
 
 def predict_new_data(
-    X_new: pd.DataFrame, model_path=TRAINED_MODEL_PATH, save_path=PREDICTION_PATH_FILE
+    X_new: pd.DataFrame,
+    model_name: str = "bike_sharing_demand_model",
+    model_stage: str = "Production",
+    save_path: str = PREDICTION_PATH_FILE,
 ) -> dict:
 
-    result = dict()
+    result = {}
 
-    result["trained_model"] = str(TRAINED_MODEL_PATH)
+    # Correct model URI
+    model_uri = f"models:/{model_name}/{model_stage}"
+    result["registered_model_uri"] = model_uri
 
-    model_pipeline = joblib.load(model_path)
-    y_pred = model_pipeline.predict(X_new)
+    # Load model from MLflow Registry
+    mlflow.set_tracking_uri("http://localhost:5000")
+    model = mlflow.sklearn.load_model(model_uri)
+
+    # Predict
+    y_pred = model.predict(X_new)
     X_new["predicted_cnt"] = y_pred
 
+    # Save predictions
     X_new.to_csv(save_path, index=False)
     result["prediction_csv_path"] = str(save_path)
 

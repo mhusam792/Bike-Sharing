@@ -10,13 +10,13 @@ app = FastAPI()
 
 @app.post(
     "/training",
-    response_model=TrainingResponse,
+    # response_model=TrainingResponse,
     status_code=status.HTTP_201_CREATED,
 )
 async def train():
     return run_training(end_point=True, show_accuracy=True)
 
 
-@app.post("/predict", response_model=PredictionResponse, status_code=status.HTTP_200_OK)
+@app.post("/predict", status_code=status.HTTP_200_OK)
 async def predict():
     return run_prediction(end_point=True)
