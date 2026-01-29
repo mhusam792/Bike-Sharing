@@ -21,3 +21,5 @@ models/
 # scripts/test
 scripts/
 tests/
+
+.env
