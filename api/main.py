@@ -1,9 +1,12 @@
 from fastapi import FastAPI
+import pandas as pd
 from starlette import status
 
-from api.schemas import PredictionResponse, TrainingResponse
-from bike_sharing_model.models.predictor import run_prediction
+from api.schemas import BikeSharingFeatures, PredictionResponse, TrainingResponse
+from bike_sharing_model.models.predictor import predict_new_data_json
 from bike_sharing_model.models.trainer import run_training
+
+from typing import List
 
 app = FastAPI()
 
@@ -18,5 +21,8 @@ async def train():
 
 
 @app.post("/predict", status_code=status.HTTP_200_OK)
-async def predict():
-    return run_prediction(end_point=True)
+async def predict(payload: List[BikeSharingFeatures]):
+    json_data = [row.model_dump() for row in payload]
+
+    result = predict_new_data_json(json_data)
+    return result

@@ -35,9 +35,6 @@ TRAINING_DATA_FILE_PATH = DATASET_DIR / "raw" / DATA_CONFIG.training_data_file
 TESTING_DATA_FILE_PATH = DATASET_DIR / "processed" / DATA_CONFIG.test_data_file
 PREDICTION_PATH_FILE = PREDICTION_DIR / "predicted_results.csv"
 
-# Trained Model Path
-# TRAINED_MODEL_PATH = TRAINED_MODEL_DIR / f"{DATA_CONFIG.pipeline_save_file}.pkl"
-
 # Features and Target
 FEATURES_LIST = DATA_CONFIG.features
 TARGET = DATA_CONFIG.target
