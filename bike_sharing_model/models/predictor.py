@@ -1,5 +1,6 @@
 import pandas as pd
 import mlflow
+import dagshub
 
 import copy
 
@@ -17,7 +18,8 @@ def predict_new_data_json(
     X = pd.DataFrame(data_copy)[FEATURES_LIST]
 
     # Load model
-    mlflow.set_tracking_uri("http://localhost:5000")
+    # mlflow.set_tracking_uri("http://localhost:5000")
+    dagshub.init(repo_owner="Mohamed_Hussam", repo_name="Bike-Sharing", mlflow=True)
     model_uri = f"models:/{model_name}/{model_stage}"
     model = mlflow.sklearn.load_model(model_uri)
 
