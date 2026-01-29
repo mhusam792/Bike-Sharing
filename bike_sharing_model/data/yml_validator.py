@@ -13,8 +13,8 @@ class ValidateInputs(BaseModel):
     package_name: str
 
     # Package Overview
-    training_data_file: str
-    test_data_file: str
+    training_data_path: str
+    test_data_path: Optional[str] = None
 
     ## Variables / Features
     # The variable we are attempting to predict (cnt)
@@ -33,6 +33,3 @@ class ValidateInputs(BaseModel):
 
     # Set train/test split
     split: Split
-
-    # Artifacts root
-    artifacts_root: str

@@ -1,9 +1,9 @@
 # data.yml
 package_name: bike_sharing_reg
 
-# Data Files
-training_data_file: hour.csv
-test_data_file: test_split.csv
+# Data paths
+training_data_path: datasets/raw/hour.csv
+test_data_path: datasets/processed/test_split.csv
 
 # Target
 target: cnt
@@ -46,5 +46,3 @@ split:
   test_size: 0.2
   random_state: 42
 
-# Artifacts root
-artifacts_root: .
