@@ -1,6 +1,4 @@
-from fastapi import FastAPI
-import pandas as pd
-from starlette import status
+from fastapi import FastAPI, status
 
 from api.schemas import BikeSharingFeatures
 from bike_sharing_model.models.predictor import predict_new_data_json
